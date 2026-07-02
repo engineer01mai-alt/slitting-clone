@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="margin: 7px">
+    <div class="HeaderContent">SEARCH ENTER CHECK SHEET VALUE : SLITTER</div>
+
+    <div class="divContainerTai TableSearch scroll">
+        <form action="{{ url_for('search_page') }}" id="frmAddNew" method="get">
+            <table cellpadding="5" cellspacing="5" class="tableTaiFunction">
+                <tr>
+                    <td align="right" width="285">Production Date :</td>
+                    <td>
+                        <input type="text" name="ProductionDate" id="ProductionDate" class="Textbox textboxTai"
+                               style="width:200px" placeholder="dd/mm/yyyy" value="{{ q_date }}">
+                    </td>
+                    <td align="right" style="color:#000000">Material Spec :</td>
+                    <td><input class="Textbox textboxTai" id="MaterialSpec" name="MaterialSpec"
+                               placeholder="Material Spec" style="width:auto;" type="text" value="{{ q_material }}" /></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td align="right" style="color:#000000">Job No :</td>
+                    <td><input class="Textbox textboxTai" id="JobNo" name="JobNo" placeholder="Job No..."
+                               style="width:auto;" type="text" value="{{ q_jobno }}" /></td>
+                    <td align="right">Job Objective :</td>
+                    <td>
+                        <select class="Textbox textboxTai" id="JobObjective" name="JobObjective" style="width:auto;">
+                            <option value="Select All" {{ 'selected' if q_objective in ('', 'Select All') else '' }}>Select All</option>
+                            <option value="For production" {{ 'selected' if q_objective=='For production' else '' }}>For production</option>
+                            <option value="For quality re-check" {{ 'selected' if q_objective=='For quality re-check' else '' }}>For quality re-check</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="color:#000000">Machine :</td>
+                    <td><input class="Textbox textboxTai" id="Machine" name="Machine" placeholder="Machine..."
+                               style="width:auto;" type="text" value="{{ q_machine }}" /></td>
+                    <td align="right" style="color:#000000">Status :</td>
+                    <td>
+                        <select class="Textbox textboxTai" id="Status" name="Status" style="width:auto;">
+                            <option value="">Please Select</option>
+                            <option value="All" {{ 'selected' if q_status=='All' else '' }}>All</option>
+                            <option value="New" {{ 'selected' if q_status=='New' else '' }}>Save</option>
+                            <option value="Enter" {{ 'selected' if q_status=='Enter' else '' }}>Enter</option>
+                            <option value="Submitted" {{ 'selected' if q_status=='Submitted' else '' }}>Submitted</option>
+                            <option value="Completed" {{ 'selected' if q_status=='Completed' else '' }}>Completed</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:20px"></td>
+                    <td></td>
+                    <td><input name="btnSearch" id="btnSearch" type="submit" value="Search" class="Search" /></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <table style="padding-top:60px" class="tbData">
+        <tr><td class="THeader" style="background:#d8d0d0;font-weight:bold;font-size:15px;width:200px">Information List</td></tr>
+    </table>
+
+    <table class="tbData" width="100%" id="myTable">
+        <tr class="THeader" style="font-weight:bold;color:#000000">
+            <td width="1%">No.</td>
+            <td width="1%">Production Date</td>
+            <td width="1%">Job No</td>
+            <td width="1%">Machine</td>
+            <td width="1%">Material Spec</td>
+            <td width="1%">Job Objective</td>
+            <td width="1%">Status</td>
+            <td width="10%">Remarks</td>
+        </tr>
+        {% for row in rows %}
+        <tr class="HeaderTS" onclick="location.href='{{ url_for('entry_page', JobNo=row['job_no']) }}'" style="color:#000000">
+            <td align="center">{{ loop.index }}</td>
+            <td align="left">{{ row['production_date'] }}</td>
+            <td align="left">{{ row['job_no'] }}</td>
+            <td align="left">{{ row['machine'] }}</td>
+            <td align="left">{{ row['material_spec'] }}</td>
+            <td align="left">{{ row['job_objective'] }}</td>
+            <td align="left">{{ row['status'] }}</td>
+            <td id="result1_{{ row['job_no'] }}">Checking....</td>
+            <td hidden="hidden" class="result" id="{{ row['job_no'] }}"></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('.result').each(function () {
+            var jobNo = $(this).attr('id').trim();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{{ url_for('ajax_result') }}",
+                data: { "jobNo": jobNo },
+                success: function (data) {
+                    var result = data.split('_');
+                    $("#" + jobNo).text(result[1]);
+                    $("#result1_" + jobNo).text(result[0]);
+                },
+                error: function () {}
+            });
+        });
+    });
+</script>
+{% endblock %}

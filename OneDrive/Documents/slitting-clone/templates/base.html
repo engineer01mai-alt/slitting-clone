@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ title|default("Slitting Inspection") }}</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="HeaderCS container-fluid">
+        <div class="InfoLogin">
+            <div class="IconInfo"><i class="fa fa-user-circle" style="font-size:32px;color:#fff;"></i></div>
+            <span class="dottedline"></span>
+            <div class="Info">
+                Mr / Mrs:
+                SL1 SLITTER 1 <br />
+                <a href="#">Account Information</a>
+                | <a href="#">Log Out</a>
+            </div>
+        </div>
+        <div class="Logo">SLITTING INSPECTION SYSTEM (TEST CLONE)</div>
+    </div>
+
+    <nav class="navbar navbar-default navbar-static-top no-bottom container-fluid">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                <ul class="nav navbar-nav">
+                    <li id="Completed"><a href="#">Task(Approval)</a></li>
+                    <li id="Inspection" class="active"><a href="{{ url_for('search_page') }}">Inspection</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid boderContainer">
+        <div class="row profile-sidebar">
+            <div class="col-md-2 no-padding-T">
+                <div class="LeftInformation">INFORMATION</div>
+                <div class="profile-sidebar">
+                    <div class="profile-usermenu">
+                        <ul class="nav Menuleft">
+                            <li class="active">
+                                <a href="{{ url_for('entry_page') }}" id="SlittingInspectionPage1A">
+                                    <i class="fa fa-arrow-right"></i> Enter Inspection Result : Slitter
+                                </a>
+                            </li>
+                            <div class="dottedVertical"></div>
+                            <li class="active">
+                                <a href="{{ url_for('search_page') }}" id="SearchReportSlitterA">
+                                    <i class="fa fa-arrow-right"></i> Inspection Report : Slitter
+                                </a>
+                            </li>
+                            <div class="dottedVertical"></div>
+                            <li class="active">
+                                <a href="#" id="SummaryReportSlittering">
+                                    <i class="fa fa-arrow-right"></i> Summary Report : Slitter
+                                </a>
+                            </li>
+                            <div class="dottedVertical"></div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10 no-padding-T Container-content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <div class="Footer">
+        <span style="padding: 7px; display: block;">Test Clone Environment - For Data Integration Testing Only</span>
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

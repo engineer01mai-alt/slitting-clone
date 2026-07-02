@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+slitting.db
+.venv/
+venv/

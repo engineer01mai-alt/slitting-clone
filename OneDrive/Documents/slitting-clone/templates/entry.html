@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="margin: 7px">
+    <div class="HeaderContent">ENTER CHECK SHEET VALUE : SLITTER</div>
+
+    <div class="divContainerTai TableSearch">
+        <table cellpadding="5" cellspacing="5" style="padding:20px;padding-left:50px" class="tableTai">
+            <tr>
+                <td align="right" style="color:#000000">Production Date :</td>
+                <td><input class="Textbox textboxTai" id="ProductionDate" name="ProductionDate" style="width:auto;" type="text" value="{{ job['production_date'] }}" /></td>
+                <td align="right" style="color:#000000">Machine :</td>
+                <td><input Readonly="Readonly" class="TextboxReadonly textboxTai" id="Machine" name="Machine" style="width:auto;" type="text" value="{{ job['machine'] }}" /></td>
+            </tr>
+            <tr>
+                <td align="right" style="color:#000000">Job No :</td>
+                <td><input Readonly="Readonly" class="TextboxReadonly textboxTai" id="JobNo" name="JobNo" style="width:auto;" type="text" value="{{ job['job_no'] }}" /></td>
+                <td align="right" style="color:#000000">Output Type :</td>
+                <td><input Readonly="Readonly" class="TextboxReadonly textboxTai" id="OutputType" name="OutputType" style="width:auto;" type="text" value="{{ job['output_type'] }}" /></td>
+            </tr>
+            <tr>
+                <td align="right" style="color:#000000">Job Objective :</td>
+                <td><input Readonly="Readonly" class="TextboxReadonly textboxTai" id="JobObjective" name="JobObjective" style="width:auto;" type="text" value="{{ job['job_objective'] }}" /></td>
+                <td align="right" style="color:#000000">Material Spec :</td>
+                <td><input Readonly="Readonly" class="TextboxReadonly textboxTai" id="MaterialSpec" name="MaterialSpec" style="width:auto;" type="text" value="{{ job['material_spec'] }}" /></td>
+            </tr>
+            <tr>
+                <td align="right" style="color:#000000">Status :</td>
+                <td><input Readonly="Readonly" class="TextboxReadonly textboxTai" id="Status" name="Status" style="width:auto;" type="text" value="{{ job['status'] }}" /></td>
+            </tr>
+        </table>
+
+        <table class="tbData" width="100%" style="padding-top:30px" id="Table02">
+            <tr class="THeader" style="font-weight:bold;font-size:11px;color:#000000">
+                <td width="5%">No.</td>
+                <td width="10%">Material ID</td>
+                <td width="10%">Material No</td>
+                <td width="10%">Shear No</td>
+                <td width="10%">Thickness (mm)</td>
+                <td width="10%">Width (mm)</td>
+                <td width="10%">Length (mm)</td>
+                <td width="10%">Weight (kg)</td>
+                <td width="12%">Thickness (mm) - Actual</td>
+                <td width="12%">Width (mm) - Actual</td>
+            </tr>
+            <tr class="HeaderTS" style="color:#000000">
+                <td align="left">1</td>
+                <td align="left" id="MaterialID">{{ job['material_id'] }}</td>
+                <td align="left" id="MaterialNo">{{ job['material_no'] }}</td>
+                <td align="left" id="ShearNo">{{ job['shear_no'] }}</td>
+                <td align="left" id="Thickness">{{ job['thickness'] }}</td>
+                <td align="left" id="Width">{{ job['width'] }}</td>
+                <td align="center" id="Length">{{ job['length'] }}</td>
+                <td align="left" id="Weigth">{{ job['weight'] }}</td>
+                <td align="left"><input class="Textbox allownumericwithdecimal" id="ThicknessActual" name="ThicknessActual" style="width:100px;color:#000000" type="text" value="{{ job['thickness_actual'] or '' }}" /></td>
+                <td align="left"><input class="Textbox allownumericwithdecimal" id="WidthActual" name="WidthActual" style="width:100px;color:#000000" type="text" value="{{ job['width_actual'] or '' }}" /></td>
+            </tr>
+        </table>
+
+        <table style="padding-top:30px;padding-bottom:5px">
+            <tr>
+                <td><button id="btnNotUse" name="btnNotUse" type="submit" form="frmEntry" class="Search" style="color:#000000">Not Use</button></td>
+                <td width="50px"></td>
+                <td style="font-size:12px;font-weight:bold;color:#000000">Task Zone</td>
+            </tr>
+        </table>
+
+        <form action="{{ url_for('entry_page_save') }}" method="post" id="frmEntry" style="overflow-x:scroll">
+            <input type="hidden" name="JobNo" value="{{ job['job_no'] }}" />
+            <table class="tbData" width="100%" id="tableDefine" border="1">
+                <tr class="THeader" style="font-weight:bold;font-size:11px">
+                    <td>#</td>
+                    <td>Standard No</td>
+                    <td>Cust Code</td>
+                    <td>Inventory No</td>
+                    <td>Size</td>
+                    <td>Top Thickness Spec</td>
+                    <td>Top Thickness Actual</td>
+                    <td>Result</td>
+                    <td>Top Width Spec</td>
+                    <td>Top Width Actual</td>
+                    <td>Result</td>
+                    <td>End Thickness Spec</td>
+                    <td>End Thickness Actual</td>
+                    <td>Result</td>
+                    <td>End Width Spec</td>
+                    <td>End Width Actual</td>
+                    <td>Result</td>
+                    <td>Camber Actual</td>
+                    <td>Deviation Actual</td>
+                    <td>Burr Spec</td>
+                    <td>Burr Actual</td>
+                    <td>Appearance</td>
+                    <td>Overall</td>
+                </tr>
+                {% for p in pieces %}
+                <tr class="HeaderTSS" style="color:#000000">
+                    <td align="center">{{ p['seq_no'] }}</td>
+                    <td align="center"><span id="StandardNO_{{ p['seq_no'] }}">{{ p['standard_no'] }}</span></td>
+                    <td align="center"><span id="CustCode_{{ p['seq_no'] }}">{{ p['cust_code'] }}</span></td>
+                    <td align="center"><span id="InventoryNO_{{ p['seq_no'] }}">{{ p['inventory_no'] }}</span></td>
+                    <td align="center"><span id="Size_{{ p['seq_no'] }}">{{ p['size'] }}</span></td>
+
+                    <td align="center"><span id="ThickTL1_{{ p['seq_no'] }}">{{ p['thick_tl1'] }}</span></td>
+                    <td align="center">
+                        <input class="Textbox allownumericwithdecimal TopThicknessActual TopThicknessActual_{{ p['seq_no'] }}"
+                               id="TopThicknessActual_{{ p['seq_no'] }}" name="TopThicknessActual_{{ p['seq_no'] }}"
+                               style="width:70px;text-align:center" type="text" value="{{ p['top_thickness_actual'] or '' }}" />
+                    </td>
+                    <td align="center"><span id="TopThicknessRes_{{ p['seq_no'] }}" style="color:{{ 'green' if p['top_thickness_res']=='OK' else 'red' }};">{{ p['top_thickness_res'] }}</span></td>
+
+                    <td align="center"><span id="WidthTL1_{{ p['seq_no'] }}">{{ p['width_tl1'] }}</span></td>
+                    <td align="center">
+                        <input class="Textbox allownumericwithdecimal TopWidthActual TopWidthActual_{{ p['seq_no'] }}"
+                               id="TopWidthActual_{{ p['seq_no'] }}" name="TopWidthActual_{{ p['seq_no'] }}"
+                               style="width:70px;text-align:center" type="text" value="{{ p['top_width_actual'] or '' }}" />
+                    </td>
+                    <td align="center"><span id="TopWidthRes_{{ p['seq_no'] }}" style="color:{{ 'green' if p['top_width_res']=='OK' else 'red' }};">{{ p['top_width_res'] }}</span></td>
+
+                    <td align="center"><span id="ThickTL2_{{ p['seq_no'] }}">{{ p['thick_tl2'] }}</span></td>
+                    <td align="center">
+                        <input class="Textbox allownumericwithdecimal EndThicknessActual EndThicknessActual_{{ p['seq_no'] }}"
+                               id="EndThicknessActual_{{ p['seq_no'] }}" name="EndThicknessActual_{{ p['seq_no'] }}"
+                               style="width:70px;text-align:center" type="text" value="{{ p['end_thickness_actual'] or '' }}" />
+                    </td>
+                    <td align="center"><span id="EndThicknessRes_{{ p['seq_no'] }}" style="color:{{ 'green' if p['end_thickness_res']=='OK' else 'red' }};">{{ p['end_thickness_res'] }}</span></td>
+
+                    <td align="center"><span id="WidthTL2_{{ p['seq_no'] }}">{{ p['width_tl2'] }}</span></td>
+                    <td align="center">
+                        <input class="Textbox allownumericwithdecimal EndWidthActual EndWidthActual_{{ p['seq_no'] }}"
+                               id="EndWidthActual_{{ p['seq_no'] }}" name="EndWidthActual_{{ p['seq_no'] }}"
+                               style="width:70px;text-align:center" type="text" value="{{ p['end_width_actual'] or '' }}" />
+                    </td>
+                    <td align="center"><span id="EndWidthRes_{{ p['seq_no'] }}" style="color:{{ 'green' if p['end_width_res']=='OK' else 'red' }};">{{ p['end_width_res'] }}</span></td>
+
+                    <td align="center">
+                        <input class="Textbox allownumericwithdecimal CamActual CamActual_{{ p['seq_no'] }}"
+                               id="CamActual_{{ p['seq_no'] }}" name="CamActual_{{ p['seq_no'] }}"
+                               style="width:60px;text-align:center" type="text" value="{{ p['camber_actual'] or '' }}" />
+                    </td>
+                    <td align="center">
+                        <input class="Textbox allownumericwithdecimal DevActual DevActual_{{ p['seq_no'] }}"
+                               id="DevActual_{{ p['seq_no'] }}" name="DevActual_{{ p['seq_no'] }}"
+                               style="width:60px;text-align:center" type="text" value="{{ p['deviation_actual'] or '' }}" />
+                    </td>
+
+                    <td align="center"><span id="Burr_{{ p['seq_no'] }}">{{ p['burr_limit'] }}</span></td>
+                    <td align="center">
+                        <input class="Textbox allownumericwithdecimal BurrActual BurrActual_{{ p['seq_no'] }}"
+                               id="BurrActual_{{ p['seq_no'] }}" name="BurrActual_{{ p['seq_no'] }}"
+                               style="width:60px;text-align:center" type="text" value="{{ p['burr_actual'] or '' }}" />
+                    </td>
+
+                    <td align="center">
+                        <select name="Appreance_{{ p['seq_no'] }}" id="checkAppreance_{{ p['seq_no'] }}" style="width:80px;">
+                            <option value="OK" {{ 'selected' if p['appearance']=='OK' else '' }}>OK</option>
+                            <option value="NG" {{ 'selected' if p['appearance']=='NG' else '' }}>NG</option>
+                        </select>
+                    </td>
+                    <td align="center">
+                        <span id="OverallResult_{{ p['seq_no'] }}" class="{{ 'OverallResultOK' if p['overall_result']=='OK' else ('OverallResultNG' if p['overall_result']=='NG' else '') }}">{{ p['overall_result'] }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <div style="padding-top:15px;">
+                <button type="submit" name="btnSubmit" id="btnSubmit" class="Search">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // สูตรเดียวกับ checkpoint() ต้นฉบับ ใช้ตรวจ Camber/Deviation/Burr แบบ client-side (แสดงผลทันทีตอนกรอก)
+    function checkpoint(TL, actual, operator) {
+        if (TL === "" || TL === null) return true;
+        if (actual === "" || actual === null) return false;
+        actual = parseFloat(actual); TL = parseFloat(TL);
+        switch (operator) {
+            case "<=": return actual <= TL;
+            case ">=": return actual >= TL;
+            case "<": return actual < TL;
+            case ">": return actual > TL;
+        }
+        return false;
+    }
+</script>
+{% endblock %}

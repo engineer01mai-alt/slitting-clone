@@ -1,0 +1,40 @@
+body { font-family: Arial, Tahoma, sans-serif; font-size: 13px; background:#f2f2f2; margin:0; }
+
+.HeaderCS { background:#2c3e50; color:#fff; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; }
+.InfoLogin { display:flex; align-items:center; gap:10px; }
+.Info { font-size:12px; line-height:1.4; }
+.Info a { color:#9fd3ff; text-decoration:none; }
+.dottedline { border-left:1px dashed #888; height:30px; }
+.Logo { font-weight:bold; letter-spacing:1px; }
+
+.navbar { margin-bottom:0; border-radius:0; }
+.no-bottom { border-bottom:none; }
+
+.boderContainer { background:#fff; min-height:70vh; padding-bottom:20px; }
+.LeftInformation { background:#34495e; color:#fff; padding:8px 12px; font-weight:bold; font-size:12px; }
+.profile-usermenu ul.Menuleft { list-style:none; padding:0; margin:0; }
+.profile-usermenu ul.Menuleft li { border-bottom:1px solid #eee; }
+.profile-usermenu ul.Menuleft li a { display:block; padding:10px 12px; color:#333; text-decoration:none; font-size:12px; }
+.profile-usermenu ul.Menuleft li a:hover { background:#f0f4f8; color:#2c3e50; }
+.dottedVertical { border-bottom:1px dashed transparent; }
+
+.Container-content { padding:15px; }
+.HeaderContent { background:#3f6591; color:#fff; padding:8px 15px; font-weight:bold; margin-bottom:10px; }
+
+.divContainerTai { background:#fafafa; border:1px solid #ddd; padding:10px; margin-bottom:15px; }
+.tableTai td, .tableTaiFunction td { padding:6px 8px; }
+.Textbox, .textboxTai { border:1px solid #ccc; border-radius:3px; padding:4px 6px; }
+.TextboxReadonly { border:1px solid #ddd; background:#eee; padding:4px 6px; border-radius:3px; }
+
+.tbData { border-collapse:collapse; width:100%; margin-top:10px; }
+.tbData td, .tbData th { border:1px solid #ddd; padding:6px 8px; font-size:12px; }
+.THeader { background:#dfe6ee; }
+.HeaderTS:hover, .HeaderTSS:hover { background:#f7f7f7; cursor:pointer; }
+
+.OverallResultOK { color:green; font-weight:bold; }
+.OverallResultNG { color:red; font-weight:bold; }
+
+.Search { background:#3f6591; color:#fff; border:none; padding:6px 18px; border-radius:3px; cursor:pointer; }
+.Search:hover { background:#2c4a68; }
+
+.Footer { text-align:center; background:#2c3e50; color:#ccc; padding:10px; font-size:12px; }
