@@ -81,12 +81,58 @@ SEED_JOBS = [
     ("S270537", "14/07/2022", "S1", "1/1", "ET10120       1", "1/1", 2.0, 1219.0, "C", 3100.0, None, None, "Coil", "For production", "SECC-VNX E16/E16(ROHS)", "Submitted"),
     ("S270463", "15/07/2022", "S1", "1/1", "ET10050       1", "1/1", 1.8, 1100.0, "C", 2900.0, 1.79, 1098.0, "Coil", "For production", "MSM-CC-D-ZC-K18", "Completed"),
     ("S5Z0993", "20/12/2025", "S5", "1/1", "ET20993       1", "1/1", 0.8, 900.0, "C", 1500.0, None, None, "Coil", "For production", "SGCC-ZSNCX-Z08", "Completed"),
+    # นำเข้าจากใบ MPIS (Manufacturing Process Instruction - Slitting) จริง เมื่อ 30/06/2026
+    ("S661656", "29/06/2026", "SL", "5PF2702", "GN60002 1", "10", 0.7000, 985.0, "C", 6681.0, None, None, "Coil", "For production", "MSM-CC-D-ZC-K18", "New"),
+    ("S661780", "30/06/2026", "SL", "0061587-1", "S65117301003", "10", 0.8000, 780.0, "C", 1621.0, None, None, "Coil", "For production", "SECC-VNX E08/E08(ROHS)", "New"),
 ]
 
 import random
 
 # จำนวน piece (ม้วน/เส้นที่ตรวจ) ต่อใบงาน สำหรับข้อมูลตัวอย่าง
 PIECES_PER_JOB = 3
+
+
+def mpis_piece(seq, standard_no, cust_code, inventory_no, thick, thick_tl, width, width_tl, camber_limit):
+    """สร้างแถว piece จากข้อมูลจริงในใบ MPIS (ไม่ใช่ค่าสุ่ม)"""
+    thick_min = round(thick - thick_tl, 3)
+    thick_max = round(thick + thick_tl, 3)
+    width_min = round(width - width_tl, 2)
+    width_max = round(width + width_tl, 2)
+    return dict(
+        seq_no=seq,
+        standard_no=standard_no,
+        cust_code=cust_code,
+        part_name="",
+        inventory_no=inventory_no,
+        size=f"{thick:.3f}*{width:.3f}",
+        process_thick1=thick, thick_tl1=f"-{thick_tl:.3f},+{thick_tl:.3f}",
+        thick_min1=thick_min, thick_max1=thick_max, top_thickness_actual=None,
+        process_width1=width, width_tl1=f"-{width_tl:.2f},+{width_tl:.2f}",
+        width_min1=width_min, width_max1=width_max, top_width_actual=None,
+        process_thick2=thick, thick_tl2=f"-{thick_tl:.3f},+{thick_tl:.3f}",
+        thick_min2=thick_min, thick_max2=thick_max, end_thickness_actual=None,
+        process_width2=width, width_tl2=f"-{width_tl:.2f},+{width_tl:.2f}",
+        width_min2=width_min, width_max2=width_max, end_width_actual=None,
+        camber_limit=camber_limit, camber_actual=None,
+        deviation_limit=None, deviation_actual=None,
+        burr_limit=None, burr_actual=None,
+        appearance="OK",
+    )
+
+
+# piece จริงจากใบ MPIS ต่อ job_no (ไม่ผ่าน generate_pieces_for_job แบบสุ่ม)
+MPIS_PIECES = {
+    "S661656": [
+        mpis_piece(1, "D00607/138", "DIT///ZAM-DIR", "GN60002 1", 0.7000, 0.070, 330.00, 0.300, 0.035),
+        mpis_piece(2, "T00101/24", "TAP/DIT//", "GN60002 1", 0.7000, 0.070, 158.00, 0.300, 0.035),
+        mpis_piece(3, "W06301/20", "WANNA/DIT//", "GN60002 1", 0.7000, 0.070, 490.00, 0.300, 0.035),
+    ],
+    "S661780": [
+        mpis_piece(1, "S11101/153", "SHT/PTM//", "S65117301003", 0.8000, 0.070, 416.00, 0.200, 0.040),
+        mpis_piece(2, "S11101/151", "SHT/PTM//", "S65117301003", 0.8000, 0.070, 82.00, 0.200, 0.040),
+        mpis_piece(3, "S11101/160", "SHT/PTM//", "S65117301003", 0.8000, 0.070, 175.00, 0.200, 0.040),
+    ],
+}
 
 
 def generate_pieces_for_job(job_row: dict, rng: random.Random):
@@ -221,7 +267,8 @@ def main():
     ]
     for job_tuple in SEED_JOBS:
         job_row = dict(zip(job_cols, job_tuple))
-        pieces = generate_pieces_for_job(job_row, rng)
+        job_no = job_row["job_no"]
+        pieces = MPIS_PIECES[job_no] if job_no in MPIS_PIECES else generate_pieces_for_job(job_row, rng)
         for p in pieces:
             p["top_thickness_res"] = calc_result(p["top_thickness_actual"], p["thick_min1"], p["thick_max1"])
             p["top_width_res"] = calc_result(p["top_width_actual"], p["width_min1"], p["width_max1"])
